@@ -1,7 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QAAuckHUB Healthcare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="healthstyles.css" rel="stylesheet">
+  
   <script type="module">
 
     import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
@@ -47,128 +52,139 @@
     };
 
   </script>
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QuackHub Healthcare — Hackathon Mockup</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="healthstyles.css">
 </head>
-
 <body>
   <div class="float-bg" aria-hidden="true">
-    <div class="particle p1 tiny"></div>
-    <div class="particle p2 sml"></div>
-    <div class="particle p3 med"></div>
-    <div class="particle p4 big"></div>
-    <div class="particle p5 duck"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
   </div>
-
 
   <div class="container">
     <header class="top-header">
       <div class="logo" role="banner" aria-label="QuackHub Healthcare logo">
-        <div class="mark">QH</div>
+        <div class="mark">🦆</div>
         <div class="logo-text">
-          <div class="title">QuackHub Healthcare</div>
-          <div class="sub">Quick symptom triage — hackathon mock</div>
+          <div class="title">QAAuckHUB Healthcare</div>
+          <div class="sub">Just Call the DUCKtor Already</div>
         </div>
       </div>
-      <div class="team-tag">Team Quack — Quentin · Alan · Amartya</div>
+      <div class="team-tag">Team QAAck - Quentin, Allen, Vihaan✨</div>
     </header>
 
     <main class="grid" role="main">
       <section class="card left-card">
-        <h3>Symptoms &amp; details</h3>
+        <h3>🩺 Symptoms & Patient Information</h3>
 
         <div class="symptom-block">
-          <label for="symptomSearch">Symptoms (choose multiple)</label>
-          <div id="symptomInput" class="multi-select" tabindex="0" aria-haspopup="listbox" aria-expanded="false"
-            role="combobox" aria-controls="symptomList">
+          <label for="symptomSearch">🔍 Symptoms (select multiple)</label>
+          <div id="symptomInput" class="multi-select" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="combobox" aria-controls="symptomList">
             <span id="chipArea" class="chip-area" aria-live="polite"></span>
-            <input id="symptomSearch" class="symptom-search" type="text"
-              placeholder="Type to filter / press enter to add..." />
+            <input id="symptomSearch" class="symptom-search" type="text" placeholder="Type to filter symptoms or add custom..." />
           </div>
 
           <div class="dropdown">
             <div id="symptomList" class="list" role="listbox" aria-label="Symptoms list" hidden></div>
           </div>
-          <div class="help">Tip: click or keyboard-select to add symptoms. Common examples included.</div>
+          <div class="help">💡 Start typing to filter symptoms or press Enter to add custom symptoms</div>
         </div>
 
         <div class="form-row">
           <div class="small">
-            <label for="age">Age</label>
-            <input id="age" type="number" min="0" placeholder="e.g., 24" />
+            <label for="age">👤 Age</label>
+            <input id="age" type="number" min="0" max="120" placeholder="e.g., 35" />
           </div>
           <div class="small">
-            <label for="sex">Sex</label>
+            <label for="sex">⚧ Sex</label>
             <select id="sex">
               <option value="">Prefer not to say</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
             </select>
           </div>
           <div class="small">
-            <label for="weight">Weight (lb)</label>
+            <label for="weight">⚖️ Weight (lbs)</label>
             <input id="weight" type="number" min="0" placeholder="optional" />
           </div>
           <div class="small">
-            <label for="height">Height (in)</label>
+            <label for="height">📏 Height (inches)</label>
             <input id="height" type="number" min="0" placeholder="optional" />
           </div>
         </div>
 
-        <div class="actions">
-          <button id="analyzeBtn" class="btn">Enter — Analyze</button>
-          <button id="resetBtn" class="btn secondary">Reset</button>
+        <div class="form-row">
+          <div style="flex: 2">
+            <label for="duration">⏰ Symptom Duration</label>
+            <select id="duration">
+              <option value="">Select duration</option>
+              <option value="less_than_hour">Less than 1 hour</option>
+              <option value="few_hours">Few hours</option>
+              <option value="1_day">1 day</option>
+              <option value="few_days">2-3 days</option>
+              <option value="week">About a week</option>
+              <option value="weeks">Several weeks</option>
+              <option value="months">Months</option>
+            </select>
+          </div>
+          <div style="flex: 2">
+            <label for="severity">🌡️ Pain/Discomfort Level (1-10)</label>
+            <input id="severity" type="number" min="1" max="10" placeholder="1=mild, 10=severe" />
+          </div>
         </div>
 
-        <div class="help small-help">This UI is a mock triage tool for the hackathon — it does not replace medical
-          advice.</div>
+        <div class="actions">
+          <button id="analyzeBtn" class="btn">🔍 Analyze with AI</button>
+          <button id="resetBtn" class="btn secondary">🔄 Reset</button>
+          <button id="locationBtn" class="btn secondary">📍 Get Location</button>
+        </div>
+
+        <div class="help small-help">
+          ⚠️ <strong>Important:</strong> This is an AI-assisted tool for informational purposes only. 
+          Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment.
+        </div>
       </section>
 
       <aside class="card right-col" aria-label="Results">
         <div class="result-title">
           <div>
-            <div class="muted-small">Results</div>
-            <div class="result-main">Potential Diagnosis &amp; Triage</div>
+            <div class="muted-small">🤖 AI Analysis Results</div>
+            <div class="result-main">Diagnosis & Emergency Assessment</div>
           </div>
           <div class="muted-small" id="lastUpdated">—</div>
         </div>
 
-        <div id="emergencyBanner" class="danger" role="alert" hidden>
-          <div class="danger-title">EMERGENCY CARE RECOMMENDED</div>
-          <div class="danger-sub">Get to an emergency department now. Don't be a hero.</div>
+        <div id="emergencyBanner" class="danger hidden" role="alert">
+          <div class="danger-title">🚨 EMERGENCY CARE RECOMMENDED</div>
+          <div class="danger-sub">Seek immediate emergency medical attention</div>
+          <div class="emergency-actions">
+            <button id="call911Btn" class="btn danger">📞 Call 911</button>
+            <button id="findERBtn" class="btn secondary">🏥 Find Nearest ER</button>
+          </div>
         </div>
 
         <div id="resultBox" class="result-box" aria-live="polite">
-          <div class="result-row">
-            <div class="muted-small">Potential diagnosis</div>
-            <div id="diagnosis" class="result-text">No analysis yet — press Enter.</div>
+          <div id="loadingIndicator" class="loading hidden">
+            <div class="spinner"></div>
+          </div>
+          
+          <div id="analysisResults">
+            <div class="result-section">
+              <h4>🩺 Potential Diagnosis</h4>
+              <div id="diagnosis" class="result-text">Click "Analyze with AI" to get started! 🚀</div>
+            </div>
           </div>
 
-          <div class="result-row">
-            <div class="muted-small">Suggested medications (if any)</div>
-            <div id="meds" class="result-text">—</div>
-          </div>
-
-          <div class="result-row">
-            <div class="muted-small">Confidence</div>
-            <div id="confidence" class="result-stat">—</div>
-          </div>
-
-          <div class="result-row">
-            <div class="muted-small">Emergency recommended?</div>
-            <div id="emergencyYesNo" class="result-stat">—</div>
+          <div id="locationServices" class="location-services hidden">
+            <h4>📍 Nearby Healthcare Services</h4>
+            <div id="nearbyProviders"></div>
           </div>
         </div>
 
-        <footer class="note">Prototype for demo. Data is stored client-side only.</footer>
+        <footer class="note">🔒 All data is processed securely. No personal information is stored.</footer>
       </aside>
     </main>
   </div>
 </body>
-
 </html>
