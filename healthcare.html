@@ -1,0 +1,180 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+   <script type="module">
+    async function getMedicalAdvice(promptText) {
+  // WARN: This exposes your API key in browser and is not secure.
+  const API_KEY = "YAIzaSyBqZ4uSsnutN0-3Vt75QgRy4cfJCVrxKGY";
+  const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=" + API_KEY;
+
+  const body = JSON.stringify({
+    contents: [{
+      role: "user",
+      parts: [{ text: promptText }]
+    }]
+  });
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body
+    });
+    const data = await response.json();
+    // Try to extract the returned text
+    return (
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "⚠️ Error: No text in response."
+    );
+  } catch (error) {
+    console.error("Error calling Gemini REST API:", error);
+    return "⚠️ Error: Could not provide information.";
+  }
+}
+
+window.fetchMedicalAdvice = async function () {
+  const symptomInput = document.getElementById("symptomInput").value;
+  const outputDiv = document.getElementById("diagnosisOutput");
+
+  if (!symptomInput.trim()) {
+    outputDiv.innerHTML = "Please enter symptoms first 🩺";
+    return;
+  }
+
+  outputDiv.innerHTML = "⏳ Analyzing symptoms with Gemini AI...";
+
+  // Same prompt as before
+  const prompt = `
+    Patient's symptom: ${symptomInput}
+    Please answer the following:
+    1. What are possible diagnoses?
+    2. What medications can be considered, including typical dosage ranges?
+    3. Which types of doctors should a patient see for this symptom? For each, give a one-sentence description of their specialty.
+    Present the answer in clear sections with bullet points.
+  `;
+
+  const reply = await getMedicalAdvice(prompt);
+  outputDiv.innerHTML = `<strong>Results:</strong><br/>${reply}`;
+};
+
+</script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QuackHub Healthcare — Hackathon Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="healthstyles.css">
+</head>
+<body>
+  <div class="float-bg" aria-hidden="true">
+    <div class="particle p1 tiny"></div>
+    <div class="particle p2 sml"></div>
+    <div class="particle p3 med"></div>
+    <div class="particle p4 big"></div>
+    <div class="particle p5 duck"></div>
+  </div>
+
+
+  <div class="container">
+    <header class="top-header">
+      <div class="logo" role="banner" aria-label="QuackHub Healthcare logo">
+        <div class="mark">QH</div>
+        <div class="logo-text">
+          <div class="title">QuackHub Healthcare</div>
+          <div class="sub">Quick symptom triage — hackathon mock</div>
+        </div>
+      </div>
+      <div class="team-tag">Team Quack — Quentin · Alan · Amartya</div>
+    </header>
+
+    <main class="grid" role="main">
+      <section class="card left-card">
+        <h3>Symptoms &amp; details</h3>
+
+        <div class="symptom-block">
+          <label for="symptomSearch">Symptoms (choose multiple)</label>
+          <div id="symptomInput" class="multi-select" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="combobox" aria-controls="symptomList">
+            <span id="chipArea" class="chip-area" aria-live="polite"></span>
+            <input id="symptomSearch" class="symptom-search" type="text" placeholder="Type to filter / press enter to add..." />
+          </div>
+
+          <div class="dropdown">
+            <div id="symptomList" class="list" role="listbox" aria-label="Symptoms list" hidden></div>
+          </div>
+          <div class="help">Tip: click or keyboard-select to add symptoms. Common examples included.</div>
+        </div>
+
+        <div class="form-row">
+          <div class="small">
+            <label for="age">Age</label>
+            <input id="age" type="number" min="0" placeholder="e.g., 24" />
+          </div>
+          <div class="small">
+            <label for="sex">Sex</label>
+            <select id="sex">
+              <option value="">Prefer not to say</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="small">
+            <label for="weight">Weight (lb)</label>
+            <input id="weight" type="number" min="0" placeholder="optional" />
+          </div>
+          <div class="small">
+            <label for="height">Height (in)</label>
+            <input id="height" type="number" min="0" placeholder="optional" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="analyzeBtn" class="btn">Enter — Analyze</button>
+          <button id="resetBtn" class="btn secondary">Reset</button>
+        </div>
+
+        <div class="help small-help">This UI is a mock triage tool for the hackathon — it does not replace medical advice.</div>
+      </section>
+
+      <aside class="card right-col" aria-label="Results">
+        <div class="result-title">
+          <div>
+            <div class="muted-small">Results</div>
+            <div class="result-main">Potential Diagnosis &amp; Triage</div>
+          </div>
+          <div class="muted-small" id="lastUpdated">—</div>
+        </div>
+
+        <div id="emergencyBanner" class="danger" role="alert" hidden>
+          <div class="danger-title">EMERGENCY CARE RECOMMENDED</div>
+          <div class="danger-sub">Get to an emergency department now. Don't be a hero.</div>
+        </div>
+
+        <div id="resultBox" class="result-box" aria-live="polite">
+          <div class="result-row">
+            <div class="muted-small">Potential diagnosis</div>
+            <div id="diagnosis" class="result-text">No analysis yet — press Enter.</div>
+          </div>
+
+          <div class="result-row">
+            <div class="muted-small">Suggested medications (if any)</div>
+            <div id="meds" class="result-text">—</div>
+          </div>
+
+          <div class="result-row">
+            <div class="muted-small">Confidence</div>
+            <div id="confidence" class="result-stat">—</div>
+          </div>
+
+          <div class="result-row">
+            <div class="muted-small">Emergency recommended?</div>
+            <div id="emergencyYesNo" class="result-stat">—</div>
+          </div>
+        </div>
+
+        <footer class="note">Prototype for demo. Data is stored client-side only.</footer>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>
