@@ -1,65 +1,52 @@
-
-
 <!doctype html>
 <html lang="en">
+
 <head>
-   <script type="module">
-    async function getMedicalAdvice(promptText) {
-  // WARN: This exposes your API key in browser and is not secure.
-  const API_KEY = "YAIzaSyBqZ4uSsnutN0-3Vt75QgRy4cfJCVrxKGY";
-  const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=" + API_KEY;
+  <script type="module">
 
-  const body = JSON.stringify({
-    contents: [{
-      role: "user",
-      parts: [{ text: promptText }]
-    }]
-  });
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body
-    });
-    const data = await response.json();
-    // Try to extract the returned text
-    return (
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "⚠️ Error: No text in response."
-    );
-  } catch (error) {
-    console.error("Error calling Gemini REST API:", error);
-    return "⚠️ Error: Could not provide information.";
-  }
-}
+    // Replace 'YOUR_API_KEY' with your actual Gemini API key
+    const API_KEY = "AIzaSyBqZ4uSsnutN0-3Vt75QgRy4cfJCVrxKGY";
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
-window.fetchMedicalAdvice = async function () {
-  const symptomInput = document.getElementById("symptomInput").value;
-  const outputDiv = document.getElementById("diagnosisOutput");
+    async function get_ai_response(promptText)
+    {
 
-  if (!symptomInput.trim()) {
-    outputDiv.innerHTML = "Please enter symptoms first 🩺";
-    return;
-  }
+      try
+      {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-002" });
+        const result = await model.generateContent(promptText);
+        const response = result.response;
+        return response.text();
+      } catch (error)
+      {
+        console.error("Error calling Gemini API:", error);
+        return "Error: Could not generate content.";
+      }
+    }
 
-  outputDiv.innerHTML = "⏳ Analyzing symptoms with Gemini AI...";
+    document.getElementById("analyzeBtn").onclick = async function ()
+    {
 
-  // Same prompt as before
-  const prompt = `
-    Patient's symptom: ${symptomInput}
-    Please answer the following:
-    1. What are possible diagnoses?
-    2. What medications can be considered, including typical dosage ranges?
-    3. Which types of doctors should a patient see for this symptom? For each, give a one-sentence description of their specialty.
-    Present the answer in clear sections with bullet points.
-  `;
+      const symptomInput = document.getElementById("symptomSearch").value;
+      const outputDiv = document.getElementById("diagnosis");
 
-  const reply = await getMedicalAdvice(prompt);
-  outputDiv.innerHTML = `<strong>Results:</strong><br/>${reply}`;
-};
+      if (!symptomInput.trim())
+      {
+        outputDiv.innerHTML = "Please enter symptoms first 🩺";
+        return;
+      }
 
-</script>
+      outputDiv.innerHTML = "⏳ Analyzing symptoms with Gemini AI...";
+
+      var ai_input = symptomInput + "what medicine should I take?";
+
+      const reply = await get_ai_response(ai_input);
+      outputDiv.innerHTML = `<strong>Results:</strong><br/>${reply}`;
+    };
+
+  </script>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -67,6 +54,7 @@ window.fetchMedicalAdvice = async function () {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="healthstyles.css">
 </head>
+
 <body>
   <div class="float-bg" aria-hidden="true">
     <div class="particle p1 tiny"></div>
@@ -95,9 +83,11 @@ window.fetchMedicalAdvice = async function () {
 
         <div class="symptom-block">
           <label for="symptomSearch">Symptoms (choose multiple)</label>
-          <div id="symptomInput" class="multi-select" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="combobox" aria-controls="symptomList">
+          <div id="symptomInput" class="multi-select" tabindex="0" aria-haspopup="listbox" aria-expanded="false"
+            role="combobox" aria-controls="symptomList">
             <span id="chipArea" class="chip-area" aria-live="polite"></span>
-            <input id="symptomSearch" class="symptom-search" type="text" placeholder="Type to filter / press enter to add..." />
+            <input id="symptomSearch" class="symptom-search" type="text"
+              placeholder="Type to filter / press enter to add..." />
           </div>
 
           <div class="dropdown">
@@ -115,7 +105,9 @@ window.fetchMedicalAdvice = async function () {
             <label for="sex">Sex</label>
             <select id="sex">
               <option value="">Prefer not to say</option>
-              <option>Male</option><option>Female</option><option>Other</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
             </select>
           </div>
           <div class="small">
@@ -133,7 +125,8 @@ window.fetchMedicalAdvice = async function () {
           <button id="resetBtn" class="btn secondary">Reset</button>
         </div>
 
-        <div class="help small-help">This UI is a mock triage tool for the hackathon — it does not replace medical advice.</div>
+        <div class="help small-help">This UI is a mock triage tool for the hackathon — it does not replace medical
+          advice.</div>
       </section>
 
       <aside class="card right-col" aria-label="Results">
@@ -177,4 +170,5 @@ window.fetchMedicalAdvice = async function () {
     </main>
   </div>
 </body>
+
 </html>
